@@ -1,0 +1,29 @@
+---
+  - hosts: all
+    remote_user: ansible
+    become: yes
+    tasks:
+      - name: Create a virtual machine on given ESXi hostname
+        vmware_guest:
+          hostname: 192.168.0.40
+          username: root
+          password: Rodrigo123*
+          validate_certs: no
+          folder: /
+          name: PB_Ansible_Test
+          state: poweredoff
+          guest_id: centos64Guest
+#          esxi_hostname: 192.168.0.40
+          disk:
+            - size_gb: 10
+              type: thin
+              datastore: datastore1
+          hardware:
+            memory_mb: 512
+            num_cpus: 1
+            scsi: paravirtual
+          networks:
+            - name: VM Network
+              device_type: vmxnet3
+        delegate_to: localhost
+        register: deploy_vm
